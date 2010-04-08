@@ -8,18 +8,23 @@ class Skier < Thing
   lives 1
   
   shape :circle
-  radius 12.0
+  radius 12
   mass 0.1
   moment 0.01
-  friction 0.0
+  friction 0
   rotation -Math::PI/2
   
   collision_type :player
   
+  attr_accessor :name
+  
   def move
-    obey_gravity
     bounce_off_border_x
     bounce_off_border_y
+    
+    if position.y < radius*2
+      kill!
+    end
   end
   
   def slam!
@@ -27,11 +32,7 @@ class Skier < Thing
     crash.warp position
     window.register crash
     
-    super
-  end
-  
-  def draw_ui
-    window.font.draw *@ui if @ui
+    kill!
   end
   
 end
