@@ -84,6 +84,8 @@ class TreeRun < GameWindow
   
   def next_step
     
+    display_points
+    
     # game end
     if game_over?
       stop_game
@@ -117,20 +119,27 @@ class TreeRun < GameWindow
     factor = @players.map {|p| p.position.y}.max / height
     self.steepness    = 0.3  + 2*factor
     self.tree_density = 0.01 + 0.1*factor
+    
+    @players.each(&:add_points)
   end
   
   def winner
     return unless game_over?
-    @players.select {|p| !p.destroyed?}.first
+    @players.sort_by(&:points).last
   end
   
   def display_end_message
-    self.font.draw "Game Over - #{winner.name} won!", window.width/2-100, 10, Layer::UI, 1.0, 1.0, 0xff000000
+    self.font.draw "Game Over - #{winner.name} won!", window.width/2-120, 10, Layer::UI, 1.0, 1.0, 0xff000000
     
     @should_quit ||= 0; @should_quit += 1
     if @should_quit > 300
       close
     end
+  end
+  
+  def display_points
+    self.font.draw "#{@player1.points.to_i} points", 20, 10, Layer::UI, 1.0, 1.0, 0xff000000
+    self.font.draw "#{@player2.points.to_i} points", window.width-120, 10, Layer::UI, 1.0, 1.0, 0xff000000
   end
 
   def create_trees

@@ -16,7 +16,12 @@ class Skier < Thing
   
   collision_type :player
   
-  attr_accessor :name
+  attr_accessor :name, :points
+  
+  def initialize(*args)
+    @points = 0
+    super
+  end
   
   def move
     bounce_off_border_x
@@ -32,7 +37,14 @@ class Skier < Thing
     crash.warp position
     window.register crash
     
+    @points = 0
+    
     kill!
+  end
+  
+  def add_points
+    factor = position.y/window.height
+    @points += factor
   end
   
 end
