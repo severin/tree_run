@@ -1,17 +1,12 @@
-class Crash < Thing
+class Crash < Sprite
   
-  it_is ShortLived
-  lifetime 60
+  layer Layer::UI
   
   image 'boom.png'
   
-  shape :circle
-  radius 100
-  mass 1000
-  moment 0.01
-  friction 1000
-  rotation -Math::PI/2
+  it_is ShortLived
+  lifetime 10
   
-  collision_type :ambient
+  rotation -Rotation::Quarter
   
 end

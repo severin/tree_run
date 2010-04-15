@@ -1,41 +1,53 @@
 class Skier < Thing
-
-  image 'skier/red.png'
   
   it_is Controllable
+  it_is_a Generator
+  it_has UserInterface
            
   it_has Lives
   lives 1
   
-  shape :circle
-  radius 12
-  mass 0.1
-  moment 0.01
-  friction 0
-  rotation -Math::PI/2
+  image 'skier/red.png'
+  
+  shape :poly, [CP::Vec2.new(-14,-8), CP::Vec2.new(-14,8), CP::Vec2.new(14,8), CP::Vec2.new(14,-8)]
+  moment 100_000_000
+  rotation -Rotation::Quarter
   
   collision_type :player
   
-  attr_accessor :name, :points
+  attr_accessor :name, :points, :side
   
-  def initialize(*args)
+  def initialize(window, side=:left)
+    super window
+    
     @points = 0
-    super
+    @side   = side
+    
+    install_ui
+    reset
   end
   
   def move
     bounce_off_border_x
     bounce_off_border_y
     
-    if position.y < radius*2
+    if position.y < 24
       kill!
     end
   end
   
+  def reset
+    warp_to *start_position
+  end
+  
+  def start_position
+    x = {:left => window.width/3, :right => window.width-window.width/3}[side]
+    y = window.height/3
+    [x,y]
+  end
+  
   def slam!
-    crash = Crash.new(window)
-    crash.warp position
-    window.register crash
+    generate Crash
     
     @points = 0
     
@@ -43,8 +55,15 @@ class Skier < Thing
   end
   
   def add_points
-    factor = position.y/window.height
-    @points += factor
+    @points += position.y/window.height
   end
+  
+  private
+    
+    def install_ui
+      x = {:left => 20, :right => window.width-120}[side]
+      y = 20
+      ui x, y, Gosu::Color::BLACK do "#{points.to_i} points" end
+    end
   
 end

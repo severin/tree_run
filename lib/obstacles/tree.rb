@@ -2,18 +2,14 @@ class Tree < Thing
   
   image 'tree.png'
   
-  shape :circle
-  radius 30
-  mass 1000
-  moment 0.01
-  friction 1000
-  rotation -Math::PI/2
+  shape :circle, 30
+  rotation -Rotation::Quarter
   
   collision_type :obstacle
   
   def move
-    self.position.y -= window.steepness
-    on_hitting_y { destroy!; return }
+    self.position.y -= window.game.steepness
+    on_hitting_y { destroy! }
   end
   
 end
