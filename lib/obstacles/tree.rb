@@ -8,7 +8,6 @@ class Tree < Thing
   collision_type :obstacle
   
   def move
-    self.position.y -= window.game.steepness
     on_hitting_y { destroy! }
   end
   

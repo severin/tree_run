@@ -1,3 +1,4 @@
+puts 'tree_run.rb'
 class TreeRun < GameWindow
   
   puts <<-MANUAL
@@ -35,8 +36,6 @@ class TreeRun < GameWindow
   damping 0.5
   gravity -0.2
   
-  attr_reader :game
-  
   collision :player
   collision :player, :obstacle do |player, obstacle|
     obstacle.destroy!
@@ -67,12 +66,12 @@ class TreeRun < GameWindow
     @game.step
   end
   
-  stop_on { @game.over? }
-  
-  def after_stopping
-    font.draw "Game Over - #{@game.winner.name} won!", window.width/2-120, 10, Layer::UI, 1.0, 1.0, Gosu::Color::BLACK
-    font.draw "(Space: Restart - ESC: Quit)", window.width/2-120, 30, Layer::UI, 1.0, 1.0, Gosu::Color::BLACK
+  def move
+    super
+    @game.move
   end
+  
+  stop_on { @game.over? }
   
   def restart
     @game.reset
