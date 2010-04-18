@@ -1,5 +1,8 @@
-use_gem = false
-use_gem ? require('rubygems') : $:.unshift(File.join(File.dirname(__FILE__), '/gosu_extensions/lib'))
+if File.directory? File.join(File.dirname(__FILE__), '/gosu_extensions')
+  $:.unshift(File.join(File.dirname(__FILE__), '/gosu_extensions/lib'))
+else
+  require 'rubygems'
+end
 require 'gosu_extensions'
 
 $:.unshift File.dirname(__FILE__)

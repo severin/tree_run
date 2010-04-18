@@ -15,6 +15,8 @@ class Skier < Thing
   
   collision_type :player
   
+  JUMP_DURATION = 300
+  
   attr_accessor :name, :points, :side
   
   def initialize(window, side=:left)
@@ -26,24 +28,43 @@ class Skier < Thing
     install_ui
     reset
   end
-  
-  def move
-    bounce_off_border_x
-    bounce_off_border_y
-    
-    if position.y < 24
-      kill!
-    end
-  end
-  
+
   def reset
     warp_to *start_position
+    self.rotation = -Rotation::Quarter
+    @jumping_for  = 0
   end
-  
+
   def start_position
     x = {:left => window.width/3, :right => window.width-window.width/3}[side]
     y = window.height/3
     [x,y]
+  end
+  
+  def move
+    bounce_off_border
+    
+    if jumping?
+      self.rotation -= Rotation::Full/JUMP_DURATION
+      @jumping_for -= 1
+    end
+    
+    if falling_behind?
+      kill!
+    end
+  end
+  
+  def falling_behind?
+    position.y < 24
+  end
+  
+  def jump
+    return if jumping?
+    @jumping_for = JUMP_DURATION
+  end
+  
+  def jumping?
+    @jumping_for > 0
   end
   
   def slam!

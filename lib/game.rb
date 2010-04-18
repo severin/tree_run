@@ -3,13 +3,36 @@ class Game
   attr_reader :players, :obstacles, :window, :steepness, :tree_density
   
   def initialize(window)
-    @window     = window
     @players    = []
     @obstacles  = []
     
-    window.register_ui self
+    attach_to_window(window)
+    setup_collision_handling
     reset
   end
+  
+  def attach_to_window(win)
+    @window = win
+    window.register_ui self
+  end
+  
+  def setup_collision_handling
+    install_collision :player, :player, &Collision::Simple
+    install_collision :player, :obstacle do |player, obstacle|
+      if player.jumping? && obstacle.jumpable?
+        false
+      else
+        obstacle.destroy!
+        player.slam!
+      end
+    end
+  end
+  
+  private
+  def install_collision(this, that, &blk)
+    window.collisions << Collision.new(window.things, this, that, &blk)
+  end
+  public
   
   def add_player(p)
     p.show

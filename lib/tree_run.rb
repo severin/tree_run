@@ -8,14 +8,14 @@ class TreeRun < GameWindow
       D - turn right
       S - accelerate
       W - brake
-      E - jump (hopefully)
+      E - jump (down a cliff or so)
     
     Player 2:
       J - turn left
       L - turn right
       K - accelerate
       I - brake
-      O - jump (hopefully)
+      O - jump (down a cliff or so)
     
     ESC   - exit game
     Space - restart after crash
@@ -33,32 +33,25 @@ class TreeRun < GameWindow
   caption "Tree Run - A Suicidal Freeski Undertaking"
   background Gosu::Color::WHITE
   
-  damping 0.5
-  gravity -0.2
-  
-  collision :player
-  collision :player, :obstacle do |player, obstacle|
-    obstacle.destroy!
-    player.slam!
-  end
-  
   def setup_players
     @game = Game.new(self)
     
     player1 = Skier.new(self, :left)
     player1.name = "Player 1"
     player1.controls(Gosu::Button::KbA => Moveable.left(2),
-                      Gosu::Button::KbD => Moveable.right(2),
-                      Gosu::Button::KbS => Moveable::Down,
-                      Gosu::Button::KbW => Moveable::Up)
+                     Gosu::Button::KbD => Moveable.right(2),
+                     Gosu::Button::KbS => Moveable::Down,
+                     Gosu::Button::KbW => Moveable::Up,
+                     Gosu::Button::KbE => :jump)
     @game.add_player(player1)
     
     player2 = Skier.new(self, :right)
     player2.name = "Player 2"
     player2.controls(Gosu::Button::KbJ => Moveable.left(2),
-                      Gosu::Button::KbL => Moveable.right(2),
-                      Gosu::Button::KbK => Moveable::Down,
-                      Gosu::Button::KbI => Moveable::Up)
+                     Gosu::Button::KbL => Moveable.right(2),
+                     Gosu::Button::KbK => Moveable::Down,
+                     Gosu::Button::KbI => Moveable::Up,
+                     Gosu::Button::KbO => :jump)
     @game.add_player(player2)
   end
   
@@ -74,6 +67,7 @@ class TreeRun < GameWindow
   stop_on { @game.over? }
   
   def restart
+    return unless @game.over?
     @game.reset
     proceed
   end

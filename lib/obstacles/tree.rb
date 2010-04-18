@@ -11,4 +11,8 @@ class Tree < Thing
     on_hitting_y { destroy! }
   end
   
+  def jumpable?
+    false
+  end
+  
 end
