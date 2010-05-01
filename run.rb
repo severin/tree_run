@@ -1,5 +1,5 @@
 if File.directory? File.join(File.dirname(__FILE__), '/gosu_extensions')
-  $:.unshift(File.join(File.dirname(__FILE__), '/gosu_extensions/lib'))
+  $:.unshift(File.join(File.dirname(__FILE__), '/gosu_extensions/gem/lib'))
 else
   require 'rubygems'
 end
