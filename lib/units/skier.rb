@@ -7,15 +7,13 @@ class Skier < Thing
   it_has Lives
   lives 1
   
-  image 'skier/red.png'
-  
-  shape :poly, [CP::Vec2.new(-14,-8), CP::Vec2.new(-14,8), CP::Vec2.new(14,8), CP::Vec2.new(14,-8)]
+  shape :poly, [CP::Vec2.new(-24,-14), CP::Vec2.new(-24,14), CP::Vec2.new(24,14), CP::Vec2.new(24,-14)]
   moment 100_000_000
   rotation -Rotation::Quarter
   
   collision_type :player
   
-  JUMP_DURATION = 300
+  JUMP_DURATION = 200
   
   attr_accessor :name, :points, :side
   
@@ -25,6 +23,9 @@ class Skier < Thing
     @points = 0
     @side   = side
     
+    @image_normal  = image_from 'skier/blue.png'
+    @image_jumping = image_from 'skier/blue_jumping.png'
+    
     install_ui
     reset
   end
@@ -33,6 +34,7 @@ class Skier < Thing
     warp_to *start_position
     self.rotation = -Rotation::Quarter
     @jumping_for  = 0
+    @image        = @image_normal
   end
 
   def start_position
@@ -45,7 +47,10 @@ class Skier < Thing
     bounce_off_border
     
     if jumping?
-      self.rotation -= Rotation::Full/JUMP_DURATION
+      @image = @image_jumping if @jumping_for == JUMP_DURATION
+      @image = @image_normal  if @jumping_for == 1
+      
+      #self.rotation -= Rotation::Full/JUMP_DURATION
       @jumping_for -= 1
     end
     
