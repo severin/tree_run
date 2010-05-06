@@ -15,6 +15,7 @@ require 'lib/tree_run'
 require 'lib/game'
 require 'lib/units/skier'
 require 'lib/obstacles/tree'
+require 'lib/obstacles/rock'
 require 'lib/ambient/crash'
 
 hill = TreeRun.new

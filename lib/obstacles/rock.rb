@@ -1,10 +1,9 @@
-class Tree < Thing
+class Rock < Thing
   
-  image 'tree.png'
+  image 'rock.png'
   
   shape :circle, 20
   rotation -Rotation::Quarter
-  
   
   layer Layer::Ambient
   
@@ -15,7 +14,7 @@ class Tree < Thing
   end
   
   def jumpable?
-    false
+    true
   end
   
 end

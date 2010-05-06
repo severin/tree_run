@@ -50,24 +50,27 @@ class Game
   def step
     adapt_environment
     add_points
-    create_trees
+    create_obstacles
   end
   
   def adapt_environment
     factor = @players.map { |p| p.position.y }.max / window.height
     @steepness    = 0.1  +   2*factor
-    @tree_density = 0.01 + 0.1*factor
+    @tree_density = 0.01 + 0.2*factor
   end
   
   def add_points
     @players.each &:add_points
   end
   
-  def create_trees
-    return unless rand > 1 - tree_density
-    
-    tree = window.add Tree, rand(window.width), window.height
-    @obstacles << tree
+  def create_obstacles
+    if rand > 1 - tree_density
+      tree = window.add Tree, rand(window.width), window.height
+      @obstacles << tree
+    elsif rand > 1 - tree_density/4
+      rock = window.add Rock, rand(window.width), window.height
+      @obstacles << rock
+    end
   end
   
   def move_obstacles

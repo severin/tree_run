@@ -38,8 +38,8 @@ class TreeRun < GameWindow
     
     player1 = Skier.new(self, :left)
     player1.name = "Player 1"
-    player1.controls(Gosu::Button::KbA => Moveable.left(2),
-                     Gosu::Button::KbD => Moveable.right(2),
+    player1.controls(Gosu::Button::KbA => :steer_left,
+                     Gosu::Button::KbD => :steer_right,
                      Gosu::Button::KbS => Moveable::Down,
                      Gosu::Button::KbW => Moveable::Up,
                      Gosu::Button::KbE => :jump)
@@ -47,8 +47,8 @@ class TreeRun < GameWindow
     
     player2 = Skier.new(self, :right)
     player2.name = "Player 2"
-    player2.controls(Gosu::Button::KbJ => Moveable.left(2),
-                     Gosu::Button::KbL => Moveable.right(2),
+    player2.controls(Gosu::Button::KbJ => :steer_left,
+                     Gosu::Button::KbL => :steer_right,
                      Gosu::Button::KbK => Moveable::Down,
                      Gosu::Button::KbI => Moveable::Up,
                      Gosu::Button::KbO => :jump)

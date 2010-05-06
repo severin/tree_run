@@ -11,9 +11,12 @@ class Skier < Thing
   moment 100_000_000
   rotation -Rotation::Quarter
   
+  layer Layer::Players
+  
   collision_type :player
   
   JUMP_DURATION = 200
+  JUMP_DELAY    = 120
   
   attr_accessor :name, :points, :side
   
@@ -34,6 +37,7 @@ class Skier < Thing
     warp_to *start_position
     self.rotation = -Rotation::Quarter
     @jumping_for  = 0
+    @can_jump_in  = 0
     @image        = @image_normal
   end
 
@@ -45,14 +49,16 @@ class Skier < Thing
   
   def move
     bounce_off_border
+    self.rotation = -Rotation::Quarter
     
     if jumping?
       @image = @image_jumping if @jumping_for == JUMP_DURATION
       @image = @image_normal  if @jumping_for == 1
       
-      #self.rotation -= Rotation::Full/JUMP_DURATION
       @jumping_for -= 1
+      @can_jump_in = JUMP_DELAY if @jumping_for == 0
     end
+    @can_jump_in -= 1 if @can_jump_in > 0
     
     if falling_behind?
       kill!
@@ -63,9 +69,25 @@ class Skier < Thing
     position.y < 24
   end
   
-  def jump
+  def steer_left
     return if jumping?
+    # self.rotation += Rotation::Full/24
+    move_left(2.5)
+  end
+  
+  def steer_right
+    return if jumping?
+    # self.rotation -= Rotation::Full/24
+    move_right(2.5)
+  end
+  
+  def jump
+    return unless can_jump?
     @jumping_for = JUMP_DURATION
+  end
+  
+  def can_jump?
+    !jumping? && @can_jump_in == 0
   end
   
   def jumping?
